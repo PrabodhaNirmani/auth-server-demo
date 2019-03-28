@@ -27,17 +27,10 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @Autowired
-    private TokenStore tokenStore;
-
-    @Autowired
-    private JwtAccessTokenConverter jwtTokenEnhancer;
-
-
-//    @Bean
-//    TokenStore jdbcTokenStore(){
-//        return new JdbcTokenStore(dataSource);
-//    }
+    @Bean
+    TokenStore jdbcTokenStore(){
+        return new JdbcTokenStore(dataSource);
+    }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -54,8 +47,7 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
     public void configure(AuthorizationServerEndpointsConfigurer endpoint) throws Exception {
 
         endpoint
-                .tokenStore(tokenStore)
-                .tokenEnhancer(jwtTokenEnhancer)
+                .tokenStore(jdbcTokenStore())
                 .authenticationManager(authenticationManager);
     }
 }
