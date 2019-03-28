@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
 
@@ -26,11 +27,18 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenStore tokenStore;
 
-    @Bean
-    TokenStore jdbcTokenStore(){
-        return new JdbcTokenStore(dataSource);
-    }
+    @Autowired
+    private JwtAccessTokenConverter jwtTokenEnhancer;
+
+
+//    @Bean
+//    TokenStore jdbcTokenStore(){
+//        return new JdbcTokenStore(dataSource);
+//    }
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.checkTokenAccess("isAuthenticated()").tokenKeyAccess("permitAl()");
@@ -45,6 +53,9 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoint) throws Exception {
 
-        endpoint.tokenStore(jdbcTokenStore()).authenticationManager(authenticationManager);
+        endpoint
+                .tokenStore(tokenStore)
+                .tokenEnhancer(jwtTokenEnhancer)
+                .authenticationManager(authenticationManager);
     }
 }
