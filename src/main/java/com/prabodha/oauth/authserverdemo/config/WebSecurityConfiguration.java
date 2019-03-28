@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -13,37 +15,28 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 @Configuration
-public class AuthServerConfiguration extends WebSecurityConfigurerAdapter implements AuthorizationServerConfigurer
-{
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    UserDetailsService userDetailsService;
+
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
+    public AuthenticationManager getAuthenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-
-        security.checkTokenAccess("permitAll()");
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Override
-    public void configure(ClientDetailsServiceConfigurer client) throws Exception {
-        client.inMemory()
-                .withClient("web")
-                .secret(passwordEncoder.encode("webpass"))
-                .scopes("READ", "WRITE")
-                .authorizedGrantTypes("password", "authorization_code");
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoint) throws Exception {
 
-        endpoint.authenticationManager(authenticationManager);
-    }
 }
