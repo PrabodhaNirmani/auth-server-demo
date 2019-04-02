@@ -57,8 +57,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), "babyio".toCharArray());
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jwt"));
-        //-- for the simple demo purpose, used the secret for signing.
-        //-- for production, it is recommended to use public/private key pair
+
 //        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 //        converter.setSigningKey("Demo-Key-1");
 
