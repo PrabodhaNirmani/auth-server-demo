@@ -1,5 +1,6 @@
 package com.prabodha.oauth.authserverdemo.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
@@ -11,20 +12,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.Date;
 
-
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value ={"createdAt","updatedAt","createdBy","updatedBy"},allowGetters = true)
-@Table(name = "permission")
-public class Permission {
+@Table(name = "oauth_code")
+public class OauthCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "code_id")
+    private int codeId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "authentication")
+    private Long authentication;
 
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -44,11 +48,22 @@ public class Permission {
     @Column(name = "updated_by")
     private String updatedBy;
 
+
+    public OauthCode() {
+    }
+
+    public OauthCode(OauthCode oauthCode) {
+        this.code = oauthCode.getCode();
+        this.authentication = oauthCode.getAuthentication();
+
+    }
+
     @Override
     public String toString() {
-        return "Permission{" +
-                "permission_id='" + id + '\'' +
-                ", permission_name=" +  name + '\'' +
+        return "OauthCode{" +
+                "code_id='" + codeId + '\'' +
+                ", code=" + code + '\'' +
+                ", authentication=" + authentication + '\'' +
                 ", createdAt=" + createdAt + '\'' +
                 ", updatedAt=" + updatedAt + '\'' +
                 ", createdBy='" + createdBy + '\'' +

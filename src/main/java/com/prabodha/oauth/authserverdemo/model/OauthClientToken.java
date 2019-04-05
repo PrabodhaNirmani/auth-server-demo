@@ -1,5 +1,6 @@
 package com.prabodha.oauth.authserverdemo.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.security.acl.LastOwnerException;
 import java.util.Date;
 
 
@@ -16,15 +18,25 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value ={"createdAt","updatedAt","createdBy","updatedBy"},allowGetters = true)
-@Table(name = "permission")
-public class Permission {
+@Table(name = "oauth_client_token")
+public class OauthClientToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "authentication_id")
+    private String authenticationId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "token")
+    private Long token;
+
+    @Column(name = "token_id")
+    private String tokenId;
+
+    @Column(name = "user_name")
+    private String username;
+
+    @Column(name = "client_id")
+    private String clientId;
 
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -44,11 +56,26 @@ public class Permission {
     @Column(name = "updated_by")
     private String updatedBy;
 
+    public OauthClientToken() {
+    }
+
+    public OauthClientToken(OauthAccessToken accessToken) {
+        this.authenticationId = accessToken.getAuthenticationId();
+        this.token = accessToken.getToken();
+        this.tokenId = accessToken.getTokenId();
+        this.username = accessToken.getUsername();
+        this.clientId = accessToken.getClientId();
+
+    }
+
     @Override
     public String toString() {
-        return "Permission{" +
-                "permission_id='" + id + '\'' +
-                ", permission_name=" +  name + '\'' +
+        return "OauthClientToken{" +
+                "authentication_id='" + authenticationId + '\'' +
+                ", client_token_id=" + tokenId + '\'' +
+                ", client_token=" + token + '\'' +
+                ", username='" + username + '\'' +
+                ", client_id='" + clientId + '\'' +
                 ", createdAt=" + createdAt + '\'' +
                 ", updatedAt=" + updatedAt + '\'' +
                 ", createdBy='" + createdBy + '\'' +
