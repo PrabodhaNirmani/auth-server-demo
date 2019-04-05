@@ -12,6 +12,7 @@
     <artifactId>auth-server-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>auth-server-demo</name>
+    <packaging>jar</packaging>
     <description>Project for Spring Boot</description>
 
     <properties>
