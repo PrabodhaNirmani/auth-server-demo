@@ -24,8 +24,8 @@ public class OauthAccessToken {
     @Column(name = "authentication_id")
     private String authenticationId;
 
-    @Column(name = "token")
-    private Long token;
+    @Column(name = "token", length = 1000)
+    private String token;
 
     @Column(name = "token_id")
     private String tokenId;
@@ -39,7 +39,7 @@ public class OauthAccessToken {
     @Column(name = "authentication")
     private Long authentication;
 
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", length = 1000)
     private String refreshToken;
 
     @Column(name = "created_at",nullable = false, updatable = false)

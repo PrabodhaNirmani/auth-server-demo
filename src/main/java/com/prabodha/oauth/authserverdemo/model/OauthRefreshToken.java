@@ -20,8 +20,8 @@ import java.util.Date;
 public class OauthRefreshToken {
 
 
-    @Column(name = "token")
-    private Long token;
+    @Column(name = "token", length = 1000)
+    private String token;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

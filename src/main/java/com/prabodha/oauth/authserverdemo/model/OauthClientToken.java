@@ -25,8 +25,8 @@ public class OauthClientToken {
     @Column(name = "authentication_id")
     private String authenticationId;
 
-    @Column(name = "token")
-    private Long token;
+    @Column(name = "token", length = 1000)
+    private String token;
 
     @Column(name = "token_id")
     private String tokenId;
